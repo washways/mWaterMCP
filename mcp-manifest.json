@@ -2,7 +2,7 @@
   "name": "mwater-mcp",
   "version": "0.1.0",
   "description": "Query mWater water point data (boreholes, wells, etc.) via MCP.",
-  "command": ["node", "--loader", "ts-node/esm", "src/server.ts"],
+  "command": ["npm", "start"],
   "env": {
     "MWATER_USERNAME": "your mWater login",
     "MWATER_PASSWORD": "your mWater password",

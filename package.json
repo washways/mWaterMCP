@@ -9,7 +9,7 @@
     "start:ts": "node --loader ts-node/esm src/server.ts",
     "dev": "node --loader ts-node/esm src/server.ts",
     "build": "tsc -p tsconfig.json",
-    "quickstart": "npm install && npm run start:ts"
+    "quickstart": "npm install && npm run build && npm start"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.27.1",

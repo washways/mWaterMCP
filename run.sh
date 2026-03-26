@@ -16,5 +16,7 @@ MWATER_BASE_URL=https://api.mwater.co/v3
 PORT=3001
 EOF
 
-echo -e "\nSaved .env. Starting quickstart (install + run)...\n"
-npm run quickstart
+echo -e "\nSaved .env. Installing, building, and starting (prod JS)...\n"
+npm install
+npm run build
+npm start

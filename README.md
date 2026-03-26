@@ -10,8 +10,9 @@ The script asks for your mWater username/password, writes `.env`, installs depen
 
 Manual alternative:
 1) Copy `.env.example` to `.env` and fill in your mWater login.
-2) `npm run quickstart`  (installs + starts)
-   - or `npm install`, then `npx ts-node src/server.ts` (dev) or `npm start` after `npm run build`.
+2) `npm install`
+3) `npm run build`
+4) `npm start`
 
 ## Exposed tools
 - `ping` – check connection.
