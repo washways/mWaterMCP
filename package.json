@@ -6,8 +6,8 @@
   "main": "dist/server.js",
   "scripts": {
     "start": "node dist/server.js",
-    "start:ts": "ts-node --esm src/server.ts",
-    "dev": "ts-node --esm src/server.ts",
+    "start:ts": "node --loader ts-node/esm src/server.ts",
+    "dev": "node --loader ts-node/esm src/server.ts",
     "build": "tsc -p tsconfig.json",
     "quickstart": "npm install && npm run start:ts"
   },
