@@ -1,0 +1,11 @@
+{
+  "name": "mwater-mcp",
+  "version": "0.1.0",
+  "description": "Query mWater water point data (boreholes, wells, etc.) via MCP.",
+  "command": ["npx", "ts-node", "src/server.ts"],
+  "env": {
+    "MWATER_USERNAME": "your mWater login",
+    "MWATER_PASSWORD": "your mWater password",
+    "MWATER_BASE_URL": "https://api.mwater.co/v3"
+  }
+}

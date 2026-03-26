@@ -1,0 +1,25 @@
+{
+  "name": "mwater-mcp",
+  "version": "0.1.0",
+  "description": "Model Context Protocol server exposing the mWater API for Nanobot/LLM clients.",
+  "type": "module",
+  "main": "dist/server.js",
+  "scripts": {
+    "start": "node dist/server.js",
+    "start:ts": "ts-node src/server.ts",
+    "dev": "ts-node src/server.ts",
+    "build": "tsc -p tsconfig.json",
+    "quickstart": "npm install && npm run start:ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.3.0",
+    "axios": "^1.7.7",
+    "dotenv": "^16.4.5",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4",
+    "nodemon": "^3.1.0"
+  }
+}
