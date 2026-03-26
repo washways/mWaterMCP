@@ -58,16 +58,12 @@ server.tool("list_entity_types", "List all entity types (tables) in the tenant."
   return { content: [{ type: "text", text: JSON.stringify(types, null, 2) }] };
 });
 
-server.tool(
-  "list_properties",
-  z.object({ entityType: z.string() }),
-  async ({ entityType }) => {
-    const props = await client.listProperties(entityType);
-    return { content: [{ type: "text", text: JSON.stringify(props, null, 2) }] };
-  }
-);
+server.tool("list_properties", { entityType: z.string() }, async ({ entityType }) => {
+  const props = await client.listProperties(entityType);
+  return { content: [{ type: "text", text: JSON.stringify(props, null, 2) }] };
+});
 
-const querySchema = z.object({
+const querySchema = {
   entityCode: z.string(),
   filter: z.union([z.string(), z.record(z.any())]).optional(),
   limit: z
@@ -79,7 +75,7 @@ const querySchema = z.object({
     .default(DEFAULT_LIMIT),
   fields: z.record(z.number()).optional(),
   sort: z.union([z.array(z.string()), z.record(z.number())]).optional()
-});
+};
 
 server.tool(
   "query_entities",
@@ -101,7 +97,7 @@ server.tool(
   }
 );
 
-const nearestSchema = z.object({
+const nearestSchema = {
   entityCode: z.string().default("water_point"),
   latitude: z.number(),
   longitude: z.number(),
@@ -109,7 +105,7 @@ const nearestSchema = z.object({
   maxDistanceMeters: z.number().positive().optional().default(20000),
   extraFilter: z.union([z.string(), z.record(z.any())]).optional(),
   fields: z.array(z.string()).optional()
-});
+};
 
 server.tool(
   "nearest_entities",
@@ -150,7 +146,7 @@ server.tool(
 
 server.tool(
   "list_groups",
-  z.object({ includePrivate: z.boolean().optional() }),
+  { includePrivate: z.boolean().optional() },
   async ({ includePrivate = false }) => {
     const groups = await client.listGroups(includePrivate);
     return {
@@ -164,12 +160,12 @@ server.tool(
   }
 );
 
-const boreholeSchema = z.object({
+const boreholeSchema = {
   latitude: z.number(),
   longitude: z.number(),
   limit: z.number().int().positive().max(50).optional().default(10),
   maxDistanceMeters: z.number().positive().optional().default(20000)
-});
+};
 
 server.tool(
   "nearest_boreholes",
