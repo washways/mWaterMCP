@@ -40,74 +40,30 @@ const server = new McpServer({
   version: "0.1.0"
 });
 
-server.tool(
-  "ping",
-  {
-    description: "Check connectivity with mWater API.",
-    inputSchema: z.object({})
-  },
-  async () => {
-    const result = await client.ping();
-    return { content: [{ type: "text", text: `API replied: ${result}` }] };
-  }
-);
+server.tool("ping", "Check connectivity with mWater API.", async () => {
+  const result = await client.ping();
+  return { content: [{ type: "text", text: `API replied: ${result}` }] };
+});
 
-server.tool(
-  "show_readme",
-  {
-    description: "Return a short README for first-time users (safe to auto-run on connect).",
-    inputSchema: z.object({})
-  },
-  async () => {
-    return { content: [{ type: "text", text: STARTUP_MESSAGE }] };
-  }
-);
+server.tool("show_readme", "Return a short README for first-time users.", async () => {
+  return { content: [{ type: "text", text: STARTUP_MESSAGE }] };
+});
 
-server.tool(
-  "getting_started",
-  {
-    description: "Show quick instructions and safe defaults for WASH users.",
-    inputSchema: z.object({})
-  },
-  async () => {
-    return { content: [{ type: "text", text: STARTUP_MESSAGE }] };
-  }
-);
+server.tool("getting_started", "Show quick instructions and safe defaults for WASH users.", async () => {
+  return { content: [{ type: "text", text: STARTUP_MESSAGE }] };
+});
 
-server.tool(
-  "list_entity_types",
-  {
-    description: "List all entity types (tables) in the tenant.",
-    inputSchema: z.object({})
-  },
-  async () => {
-    const types = await client.listEntityTypes();
-    return {
-      content: [
-        {
-          type: "text",
-          text: JSON.stringify(types, null, 2)
-        }
-      ]
-    };
-  }
-);
+server.tool("list_entity_types", "List all entity types (tables) in the tenant.", async () => {
+  const types = await client.listEntityTypes();
+  return { content: [{ type: "text", text: JSON.stringify(types, null, 2) }] };
+});
 
 server.tool(
   "list_properties",
-  {
-    description: "List properties (columns) for an entity type.",
-    inputSchema: z.object({
-      entityType: z.string()
-    })
-  },
+  z.object({ entityType: z.string() }),
   async ({ entityType }) => {
     const props = await client.listProperties(entityType);
-    return {
-      content: [
-        { type: "text", text: JSON.stringify(props, null, 2) }
-      ]
-    };
+    return { content: [{ type: "text", text: JSON.stringify(props, null, 2) }] };
   }
 );
 
@@ -127,11 +83,7 @@ const querySchema = z.object({
 
 server.tool(
   "query_entities",
-  {
-    description:
-      "Query entities by code with optional Mongo-style filter, projection, sort, and limit.",
-    inputSchema: querySchema
-  },
+  querySchema,
   async ({ entityCode, filter, limit, fields, sort }) => {
     const parsedFilter = parseFilter(filter);
     if (!parsedFilter && (limit ?? DEFAULT_LIMIT) > DEFAULT_LIMIT) {
@@ -145,14 +97,7 @@ server.tool(
       fields,
       sort
     });
-    return {
-      content: [
-        {
-          type: "text",
-          text: JSON.stringify(data, null, 2)
-        }
-      ]
-    };
+    return { content: [{ type: "text", text: JSON.stringify(data, null, 2) }] };
   }
 );
 
@@ -168,11 +113,7 @@ const nearestSchema = z.object({
 
 server.tool(
   "nearest_entities",
-  {
-    description:
-      "Find nearest entities (e.g., boreholes/water points) to a location. Uses $near on the location field.",
-    inputSchema: nearestSchema
-  },
+  nearestSchema,
   async ({
     entityCode,
     latitude,
@@ -187,7 +128,7 @@ server.tool(
     const mergedFilter = mergeFilters(nearFilter, parseFilter(extraFilter));
 
     const projection = fields
-      ? Object.fromEntries(fields.map((f) => [f, 1]))
+      ? Object.fromEntries(fields.map((f: string) => [f, 1]))
       : undefined;
 
     const data = await client.queryEntities(entityCode, {
@@ -209,12 +150,7 @@ server.tool(
 
 server.tool(
   "list_groups",
-  {
-    description: "List groups/organizations. Use includePrivate to view private groups.",
-    inputSchema: z.object({
-      includePrivate: z.boolean().optional()
-    })
-  },
+  z.object({ includePrivate: z.boolean().optional() }),
   async ({ includePrivate = false }) => {
     const groups = await client.listGroups(includePrivate);
     return {
@@ -237,11 +173,7 @@ const boreholeSchema = z.object({
 
 server.tool(
   "nearest_boreholes",
-  {
-    description:
-      "Fast path for WASH users: nearest boreholes around a point with a ready-made table.",
-    inputSchema: boreholeSchema
-  },
+  boreholeSchema,
   async ({ latitude, longitude, limit, maxDistanceMeters }) => {
     const nearFilter = makeNearFilter(latitude, longitude, maxDistanceMeters);
     const boreholeFilter = { type: "Borehole" };
@@ -261,12 +193,6 @@ server.tool(
     };
   }
 );
-
-server.setErrorHandler((err) => {
-  return {
-    content: [{ type: "text", text: `Error: ${(err as Error).message}` }]
-  };
-});
 
 function parseFilter(input?: unknown) {
   if (input === undefined) return undefined;
